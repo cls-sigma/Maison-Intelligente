@@ -1,4 +1,5 @@
-#define LDR A1  // composante photorésistance sur la pin A1
+#define LDR A0  // composante photorésistance sur la pin A1
+#define LED 9   // composante diode électroluminescente sur la pin 9
 
 int value;
  
@@ -7,6 +8,7 @@ void setup() {
    Serial.begin(9600);
 
    // initialise les broches
+   pinMode(LED_BULTIN, OUTPUT);
    pinMode(LDR, INPUT);
 }
  
@@ -14,6 +16,12 @@ void loop() {
    // mesure la tension sur la broche A1
    value = analogRead(LDR);
    Serial.println(value);
+
+   // allume la LED
+   if (value<500) digitalWrite(LED_BULTIN, HIGH);
+
+   // désactiver la LED
+   if (value>500) digitalWrite(LED_BULTIN, LOW);
 
    delay(200);
 }
