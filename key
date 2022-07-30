@@ -10,3 +10,6 @@
   "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
   "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/django-account%40django-deploy-356017.iam.gserviceaccount.com"
 }
+
+python create_app_engine_queue_task.py --project=$PROJECT_ID
+--location=$LOCATION_ID --queue=$QUEUE_ID --payload=hello
