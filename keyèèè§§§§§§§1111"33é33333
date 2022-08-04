@@ -84,3 +84,18 @@ def cae():
     return response
 # [END cloud_tasks_appengine_create_task]
 cae()
+
+
+
+{
+  "type": "service_account",
+  "project_id": "django-deploy-356017",
+  "private_key_id": "fae76ef46041d1988be9bca582cc7ef824346ebc",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCZpHFQjX5I5HHU\naLFG3W/oYrg+OhsIHgFyexZfQrDdoITDwpmor8kR+5X9rPrYIO0k0cpuaGl10hD3\n/NFFP0yPmdhTiXG2LdnS+Ev9d1L15xxiDiVOXnY6g0ffQgvZW0PnpwHuWjY6INZb\ns4a+ksf6a1hMpgw3+YmRNWDa9n/c1yfk1kIklgionzWP9pnkLnJB06Tddmt4ID2H\nFbBU4syG1btCD3S3wras8vFBNXNzH5DVSVcIneFeADiyN94CRUaGh4AzNftOMCkY\npECP64YuHBJGAnqebtWVKMngq4NdXxcqeZWjOSHDBwcnX8ERi6/jNB9z7nMFYhKf\nu2oZxXVHAgMBAAECggEAHvDc2QoFmoxW2B3VRZ4mgTgQPofZFcNlKzbahIibsaY3\n1myEIVJ1PafaxuFlCs1mtHmDOMTSKCYLwMUrJ7TdqDWlOP1+5t9I9JGITB0Rme/W\n6XBL1wJy8MmrWaylUjps7GPXobaNIRunz4PR6OMKXsXrXFQ8NbGNIK8NOEtX6JMj\nv2MOv02iVOOh4gJ1+vm3s3lE/eufXLhQREby9v8sfdgyd/R4tqUphxgBTS/zCREZ\nWUtmhD9hHUqmXUB5kNYbQCzz2ZTLUC5PjWLahmy+fNFxbalvDDzT3GsSWCvZdKQo\n8aLOs6utZYxK9PWFYlqs6YLwkqIAlKOHzPwH1aTCIQKBgQDP+zuwZyJNouqkoy7X\nxnUokwS3RI0iAovp4aGHz5EYSoXxjtlqPMfFNQmzsvs6/mlVH+RuLjR54ctNAIPI\nvIUkd9sxX0ViL2gZSmYXq9iGu3rWZIikkTrg0sOwkmpJ/+XNI/cloJV0tgUrcOUL\n2CVYJlYTfnnwiJcQu3PIcvBuzwKBgQC9HX6E0JHrT3P1o/Uvml+9HCYqjtoODzV+\n489+VWf7STd1SCkv7vnaiUy9IAdlecqNmDTs5QEjlUWlwDwd79QmIAx6JnEQ0aDE\n0rwp3+/8+TTqvdi2Pz/TN6Z9hk7ZEctscH+3JhbpWfD5IguOoHk/4EAJwX/GcRM7\nm1nPUXlwCQKBgQDKlVDCtvK25KXh0AFktC6SYwII8YD3S7u1CM4qV4hhPNXTQO2N\nib6c3NiibQhBomY/QF1k5STAQ6ufSY0UDm0x5H1hTgdrZ/niCJIBJKY4No2kHzDp\n+3x6WVG7wCJACj5w30NxJ0Xs9Q98DO9N5jAZ+N2HB38HSES9S5mv+iUwCQKBgDmA\neVK69FNfMjwTYV7bCpc+suAn1WeG+lYdwJ6CK369kW5IxbU8bZ4kN0AeOAGD2bHa\nAOWy7/i4z5eJbv4PSStafVC61ZAunTqbdPkqjRcXUx65IOaxLp/zgN0T9G+OOJM9\nVagDnd3QKjQmROtWIefpMK+GtWpKQXXTU6h09n65AoGBAKDN4DSjd9hZGu2FhNEp\nvLL09l/SwwePtMxn5e4fc7GxFB4BdpY4UUhekRutynQm03s8PkUPwV3tJ1iETz3u\nAiaqVLtp8oe+M1GLyGyF3V93YwCWk8pLBW2CvT7kX8izacvs+XOaL7u+QR70eo06\n83qgNP96YP4NleV7s9n93oy5\n-----END PRIVATE KEY-----\n",
+  "client_email": "engine@django-deploy-356017.iam.gserviceaccount.com",
+  "client_id": "117447600882584423316",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/engine%40django-deploy-356017.iam.gserviceaccount.com"
+}
