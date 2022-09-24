@@ -1,10 +1,11 @@
 /* 
  * Code d'exemple pour un capteur à ultrasons HC-SR04.
  */
-
+#include <Servo.h>
 /* Constantes pour les broches */
 const byte TRIGGER_PIN = 2; // Broche TRIGGER
 const byte ECHO_PIN = 3;    // Broche ECHO
+Servo myservo; 
  
 /* Constantes pour le timeout */
 const unsigned long MEASURE_TIMEOUT = 25000UL; // 25ms = ~8m à 340m/s
@@ -14,7 +15,8 @@ const float SOUND_SPEED = 340.0 / 1000;
 
 /** Fonction setup() */
 void setup() {
-   
+ //Definition de la broche du servo moteur
+    myservo.attach(7); 
   /* Initialise le port série */
   Serial.begin(115200);
    
@@ -40,12 +42,17 @@ void loop() {
    
   /* Affiche les résultats en mm, cm et m */
   Serial.print(F("Distance: "));
-  Serial.print(distance_mm);
-  Serial.print(F("mm ("));
+ 
   Serial.print(distance_mm / 10.0, 2);
   Serial.print(F("cm, "));
-  Serial.print(distance_mm / 1000.0, 2);
-  Serial.println(F("m)"));
+  if ((distance_mm / 10.0)<5){
+    Serial.println("Ouverture du garage");
+     
+  myservo.write(90); 
+  delay(3000);
+   myservo.write(0); 
+  
+  }
    
   /* Délai d'attente pour éviter d'afficher trop de résultats à la seconde */
   delay(500);
