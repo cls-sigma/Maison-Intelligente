@@ -1,0 +1,224 @@
+#include <SPI.h>
+#include <MFRC522.h>
+#include <Servo.h>
+#include <DHT.h>
+#include <DHT_U.h>
+/**************************PARAMETERS******************************/
+const int ipadd[4] = {147, 02, 239, 154};//{147, 199, 171, 26}; //ip address à modifier selon la carte
+int servoOpen = 180;
+int servoClose = 0;
+int delayBeforeClosing = 3000;
+/******************************************************************/
+// INPUT
+#define SS_PIN 10
+#define RST_PIN 9
+// OUTPUT
+const int servoPin = 7;
+const int ledPin = 13;
+#include <LiquidCrystal_I2C.h>
+    // Bibliothèque de l'ecran lcd
+LiquidCrystal_I2C lcd(0x27, 20, 4);      // Definition des parametres de l'ecran lcd
+
+// Definit la broche de l'Arduino sur laquelle la 
+// broche DATA du capteur est reliee 
+#define DHTPIN 6
+ //Definition de l'element servo pour le garage et la porte
+ Servo servo1; 
+ Servo servo2;
+// Definit le type de capteur utilise
+#define DHTTYPE DHT11
+// Declare un objet de type DHT
+// Il faut passer en parametre du constructeur 
+// de l'objet la broche et le type de capteur
+DHT dht(DHTPIN, DHTTYPE);
+
+/* Constantes pour les broches */
+const byte TRIGGER_PIN = 2; // Broche TRIGGER
+const byte ECHO_PIN = 3;    // Broche ECHO
+
+/* Constantes pour le timeout */
+const unsigned long MEASURE_TIMEOUT = 25000UL; // 25ms = ~8m à 340m/s
+
+/* Vitesse du son dans l'air en mm/us */
+const float SOUND_SPEED = 340.0 / 1000;
+
+MFRC522 rfid(SS_PIN, RST_PIN);
+bool approved = 0, oldApproved = 0;
+// Init array that will store new NUID
+byte nuidPICC[4];
+
+void setup() 
+{ //Initialisation du port serie
+  Serial.begin(9600);
+   // Initialise la capteur DHT11
+  dht.begin();
+  //Definition de la broche des données du servo
+   servo1.attach(5); 
+ lcd.init(); // initialisation de l'afficheur
+lcd.backlight(); // active le rétro-éclairage
+  
+lcd.setCursor(0,0);
+
+lcd.print("Maison Intelli-");
+lcd.setCursor(0,1);
+lcd.print("gente Arduino");
+delay(2000);
+lcd.clear();
+
+/* Initialise les broches  du capteur */
+  pinMode(TRIGGER_PIN, OUTPUT);
+  digitalWrite(TRIGGER_PIN, LOW); // La broche TRIGGER doit être à LOW au repos
+  pinMode(ECHO_PIN, INPUT);
+
+  SPI.begin(); // Init SPI bus
+ rfid.PCD_Init(); // Init MFRC522
+ pinMode(ledPin, OUTPUT);
+ 
+ servo2.attach(servoPin);
+ servo2.write(servoClose);
+ Serial.println(F("Scan RFID NUID..."));
+
+}
+
+
+void loop() {
+   /* 1. Lance une mesure de distance en envoyant une impulsion HIGH de 10µs sur la broche TRIGGER */
+  digitalWrite(TRIGGER_PIN, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIGGER_PIN, LOW);
+
+  /* 2. Mesure le temps entre l'envoi de l'impulsion ultrasonique et son écho (si il existe) */
+  long measure = pulseIn(ECHO_PIN, HIGH, MEASURE_TIMEOUT);
+
+  /* 3. Calcul la distance à partir du temps mesuré */
+  float distance_mm = measure / 2.0 * SOUND_SPEED;
+
+  
+
+  Serial.print(distance_mm / 10.0, 2);
+  Serial.print(F("cm, "));
+  lcd.setCursor(0,0);
+  lcd.print("Humidity:");
+  lcd.print(String(dht.readHumidity())+" %");
+  lcd.setCursor(0, 1);
+  lcd.print("Temp: ");
+  lcd.print(String(dht.readTemperature())+" °C");
+   if ((distance_mm / 10.0)<5){
+    lcd.clear();
+    lcd.setCursor(0,0);
+     lcd.print("Ouverture du");
+     lcd.setCursor(0, 1);
+  lcd.print("Garage ");
+  servo1.write(90); 
+  delay(3000);
+   servo1.write(0); 
+  
+  }
+
+  readRFID();
+ if (nuidPICC[0] == ipadd[0]
+     && nuidPICC[1] == ipadd[1]
+     && nuidPICC[2] == ipadd[2]
+     && nuidPICC[3] == ipadd[3]) {
+   approved = true;
+   if (approved != oldApproved) {
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("badge approuvée!");
+     Serial.println(F("Card approved!"));
+     digitalWrite(ledPin, HIGH);
+     servo2.write(servoOpen);
+     delay(delayBeforeClosing);
+   }
+   nuidPICC[0] = 0;
+   nuidPICC[1] = 0;
+   nuidPICC[2] = 0;
+   nuidPICC[3] = 0;
+ } else {
+   approved = false;
+   if (approved != oldApproved) {
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("Fermeture");
+     Serial.println(F("Fermeture"));
+     digitalWrite(ledPin, LOW);
+     servo2.write(servoClose);
+   }
+ }
+ oldApproved = approved;
+  delay(1000);
+  lcd.clear();
+/*Faire clignoter l'affichage de l'écran
+ 
+lcd.display();
+delay(500);
+lcd.noDisplay();
+delay(500);
+lcd.display();
+delay(500);
+int pos=0;
+
+
+//Faire défiler vers la  droite
+lcd.scrollDisplayRight();
+delay(500); 
+for (pos = 0; pos <= 14; pos += 1) { 
+    lcd.scrollDisplayRight();
+delay(500);                       
+  }
+
+  lcd.clear();
+lcd.setCursor(1,0);
+lcd.print("bonjour arduino");
+
+//Faire défiler vers la  gauche
+  for (pos = 0; pos <= 14; pos += 1) { 
+    lcd.scrollDisplayLeft();
+delay(500);                       
+  }
+
+
+//Faire Clignoter le cursuer
+
+lcd.cursor();
+delay(400);
+lcd.noCursor();
+delay(400);*/
+
+}
+
+void readRFID()
+{
+ // Look for new 1 cards
+ if ( ! rfid.PICC_IsNewCardPresent())
+   return;
+ // Verify if the NUID has been readed
+ if (  !rfid.PICC_ReadCardSerial())
+   return;
+ if (rfid.uid.uidByte[0] != nuidPICC[0] ||
+     rfid.uid.uidByte[1] != nuidPICC[1] ||
+     rfid.uid.uidByte[2] != nuidPICC[2] ||
+     rfid.uid.uidByte[3] != nuidPICC[3] ) {
+   Serial.println(F("A new card has been detected."));
+   // Store NUID into nuidPICC array
+   for (byte i = 0; i < 4; i++) {
+     nuidPICC[i] = rfid.uid.uidByte[i];
+   }
+   Serial.print(F("RFID tag in dec: "));
+   printDec(rfid.uid.uidByte, rfid.uid.size);
+   Serial.println();
+ }
+ // Halt PICC
+ rfid.PICC_HaltA();
+ // Stop encryption on PCD
+ rfid.PCD_StopCrypto1();
+}
+/**
+   Helper routine to dump a byte array as dec values to Serial.
+*/
+void printDec(byte *buffer, byte bufferSize) {
+ for (byte i = 0; i < bufferSize; i++) {
+   Serial.print(buffer[i] < 0x10 ? " 0" : " ");
+   Serial.print(buffer[i], DEC);
+ }
+}
